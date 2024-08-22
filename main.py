@@ -40,10 +40,7 @@ class Windows(QMainWindow):
         self.__init_components()
 
         # Widgets
-        self.w = WidgetCategoria()
-        self.m = WidgetMarca()
-        self.s = WidgetSize()
-        self.wi = WidgetInventario()
+        self.container = None
 
     def __init_components(self):
         q = QLabel("Menu Principal")
@@ -70,22 +67,34 @@ class Windows(QMainWindow):
         self.layout.addWidget(button)
 
     def __show_productos(self):
+
+        self.wi = WidgetInventario()
         self.wi.show()
 
     def __show_categorias(self):
 
-        try:
-            self.w.show()
-        except Exception as e:
-            print(e)
+        self.__show_widget(WidgetCategoria)
 
     def __show_marcas(self):
 
-        self.m.show()
+        self.__show_widget(WidgetMarca)
 
     def __show_sizes(self):
 
-        self.s.show()
+        self.__show_widget(WidgetSize)
+
+    def __show_widget(self,  widget):
+        try:
+           
+            if self.container is None or not self.container.isVisible():
+                self.container = widget()
+                self.container.show()
+            else:
+                self.container.close()
+                self.container = None
+
+        except Exception as e:
+            print(e)
 
 
 if __name__ == "__main__":
