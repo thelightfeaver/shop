@@ -66,7 +66,7 @@ class WidgetInventario(QWidget):
     def __load_data(self):
 
         ropas = get_all_ropa()
-        headers = ["ID", "Nombre", "Precio", "Categoria", "Size", "Marca"]
-        values = ["id", "nombre", "precio", "categoria", "size", "marca"]
+        headers = ["ID", "", "Precio", "Categoria", "Size", "Marca", "Cantidad"]
+        values = ["id", "", "precio", "categoria", "size", "marca", "cantidad"]
         tablemodel = TableModel(ropas, headers, values)
         self.table.setModel(tablemodel)
