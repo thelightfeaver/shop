@@ -7,6 +7,12 @@ def get_all_ropa():
     Returns:
     - ropa: A list of clothes.
     """
-    ropa =  Marca.select().where(Marca.eliminado == False)
-    
+    ropa = (
+        Ropa.select()
+        .join(Marca, on=(Marca.id == Ropa.marca))
+        .join(Size, on=(Size.id == Ropa.size))
+        .join(Categoria, on=(Categoria.id == Ropa.categoria))
+        .where(Ropa.eliminado == False)
+    )
+
     return ropa

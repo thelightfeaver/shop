@@ -93,11 +93,7 @@ class WidgetMarca(QWidget):
             index = selected_row[0]
             self.var_id = index.sibling(index.row(), 0).data()
             self.var_marca.setText(index.sibling(index.row(), 1).data())
-
-    def __on_table_clicked(self, index):
-        self.txt_marca.setText(index.siblingAtColumn(1).data())
-        self.var_id = index.siblingAtColumn(0).data()
-
+            
     def __limpiar_valores(self):
         self.txt_marca.clear()
         self.var_id = None

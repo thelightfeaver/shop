@@ -6,6 +6,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QComboBox,
     QTableWidget,
+    QTableView
 )
 
 from src.db.service_inventario import get_all_ropa
@@ -20,9 +21,9 @@ class WidgetInventario(QWidget):
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
         self.setWindowTitle("Inventario")
+        self.setGeometry(100, 100, 800, 600)
         self.__init_components()
         self.__load_data()
-
 
     def __init_components(self):
         label = QLabel("Inventario")
@@ -57,13 +58,15 @@ class WidgetInventario(QWidget):
         button = QPushButton("Realizar venta")
         self.layout.addWidget(button)
 
-        self.table = QTableWidget()
+        self.table = QTableView()
+        self.table.horizontalHeader().setStretchLastSection(True)
+        self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.layout.addWidget(self.table)
 
     def __load_data(self):
 
         ropas = get_all_ropa()
-        headers = ["ID", "Nombre"]
-        values = ["id", "nombre"]
-        # tablemodel = TableModel(ropas, headers, values)
-        # self.table.setModel(tablemodel)
+        headers = ["ID", "Nombre", "Precio", "Categoria", "Size", "Marca"]
+        values = ["id", "nombre", "precio", "categoria", "size", "marca"]
+        tablemodel = TableModel(ropas, headers, values)
+        self.table.setModel(tablemodel)
