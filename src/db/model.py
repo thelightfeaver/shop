@@ -32,11 +32,11 @@ class Marca(Model):
 
 class Ropa(Model):
     id = AutoField(True)
-    nombre = CharField()
     precio = FloatField()
     categoria = ForeignKeyField(Categoria)
     size = ForeignKeyField(Size)
     marca = ForeignKeyField(Marca)
+    cantidad = IntegerField()
     eliminado = BooleanField(default=False)
 
     class Meta:
