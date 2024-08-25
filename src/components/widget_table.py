@@ -1,5 +1,7 @@
 """Widget Table."""
+
 from PySide6.QtCore import QAbstractTableModel, Qt
+
 
 class TableModel(QAbstractTableModel):
     def __init__(self, data, headers=list[str], values=list[str]):
@@ -20,7 +22,15 @@ class TableModel(QAbstractTableModel):
 
             for i, value in enumerate(self._values):
                 if index.column() == i:
-                    return str(getattr(categoria, value))
+
+                    if type(value) == list:
+                        sub_att = categoria
+                        for v in value:
+                            sub_att = getattr(sub_att, v)
+
+                        return sub_att
+                    else:
+                        return getattr(categoria, value)
 
     def headerData(self, section, orientation, role=Qt.DisplayRole):
         if role == Qt.DisplayRole:

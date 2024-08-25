@@ -68,8 +68,7 @@ class Windows(QMainWindow):
 
     def __show_productos(self):
 
-        self.wi = WidgetInventario()
-        self.wi.show()
+        self.__show_widget(WidgetInventario)
 
     def __show_categorias(self):
 

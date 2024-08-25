@@ -108,9 +108,6 @@ class WidgetInventario(QWidget):
     def __load_data(self):
 
         ropas = get_all_ropa()
-        for ropa in ropas:
-            print(ropa)
-
         headers = ["ID", "Marca", "Categoria", "Size", "Precio", "Cantidad"]
         values = [
             "id",

@@ -1,9 +1,18 @@
 """Widget para gestionar marcas"""
 
-from src.db.model import Marca 
+from src.db.model import Marca
 from src.components.widget_table import TableModel
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTableView, QLabel, QLineEdit, QPushButton, QMessageBox
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QTableView,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QMessageBox,
+)
+
 
 class WidgetMarca(QWidget):
     def __init__(self):
@@ -16,7 +25,7 @@ class WidgetMarca(QWidget):
         self.__load_data()
 
     def __modificar(self):
-        if self.var_id  and self.txt_marca.text() != "":
+        if self.var_id and self.txt_marca.text() != "":
             marca = Marca.get(id=self.var_id)
             marca.nombre = self.txt_marca.text()
             marca.save()
@@ -40,9 +49,7 @@ class WidgetMarca(QWidget):
             self.__load_data()
             self.__limpiar_valores()
         else:
-            QMessageBox.critical(
-                self, "Error", "Seleccione una marca para eliminar"
-            )
+            QMessageBox.critical(self, "Error", "Seleccione una marca para eliminar")
 
     def __agregar(self):
         if self.txt_marca.text() != "":
@@ -93,7 +100,7 @@ class WidgetMarca(QWidget):
             index = selected_row[0]
             self.var_id = index.sibling(index.row(), 0).data()
             self.var_marca.setText(index.sibling(index.row(), 1).data())
-            
+
     def __limpiar_valores(self):
         self.txt_marca.clear()
         self.var_id = None

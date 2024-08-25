@@ -1,9 +1,18 @@
 """Widget para administrar tallas"""
 
-from src.db.model import Size 
+from src.db.model import Size
 from src.components.widget_table import TableModel
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTableView, QLabel, QLineEdit, QPushButton, QMessageBox
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QTableView,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QMessageBox,
+)
+
 
 class WidgetSize(QWidget):
     def __init__(self):
@@ -16,7 +25,7 @@ class WidgetSize(QWidget):
         self.__load_data()
 
     def __modificar(self):
-        if self.var_id  and self.txt_size.text() != "":
+        if self.var_id and self.txt_size.text() != "":
             size = Size.get(id=self.var_id)
             size.nombre = self.txt_size.text()
             size.save()
@@ -40,9 +49,7 @@ class WidgetSize(QWidget):
             self.__load_data()
             self.__limpiar_valores()
         else:
-            QMessageBox.critical(
-                self, "Error", "Seleccione una marca para eliminar"
-            )
+            QMessageBox.critical(self, "Error", "Seleccione una marca para eliminar")
 
     def __agregar(self):
         if self.txt_size.text() != "":
@@ -101,5 +108,3 @@ class WidgetSize(QWidget):
     def __limpiar_valores(self):
         self.txt_size.clear()
         self.var_id = None
-
- 

@@ -1,8 +1,18 @@
 """Widget para la gestión de categorías."""
-from src.db.model import Categoria 
+
+from src.db.model import Categoria
 from src.components.widget_table import TableModel
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QTableView, QLabel, QLineEdit, QPushButton, QMessageBox
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QTableView,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QMessageBox,
+)
+
 
 class WidgetCategoria(QWidget):
     def __init__(self):
@@ -15,7 +25,7 @@ class WidgetCategoria(QWidget):
         self.__load_data()
 
     def __modificar(self):
-        if self.var_id  and self.txt_categoria.text() != "":
+        if self.var_id and self.txt_categoria.text() != "":
             categoria = Categoria.get(id=self.var_id)
             categoria.nombre = self.txt_categoria.text()
             categoria.save()
@@ -39,9 +49,7 @@ class WidgetCategoria(QWidget):
             self.__load_data()
             self.__limpiar_valores()
         else:
-            QMessageBox.critical(
-                self, "Error", "Seleccione una marca para eliminar"
-            )
+            QMessageBox.critical(self, "Error", "Seleccione una marca para eliminar")
 
     def __agregar(self):
         if self.txt_categoria.text() != "":
@@ -100,5 +108,3 @@ class WidgetCategoria(QWidget):
     def __limpiar_valores(self):
         self.txt_categoria.clear()
         self.var_id = None
-
-    
