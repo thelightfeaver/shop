@@ -8,7 +8,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLineEdit,
     QTableView,
-    QTableWidget
+    QTableWidget,
 )
 
 from src.db.service_inventario import get_all_ropa
@@ -17,8 +17,11 @@ from src.db.model import Size
 from src.db.model import Categoria
 from src.components.widget_table import TableModel
 
+
 class WidgetInventario(QWidget):
-    def __init__(self, ) -> None:
+    def __init__(
+        self,
+    ) -> None:
         super().__init__()
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
@@ -30,7 +33,7 @@ class WidgetInventario(QWidget):
     def __init_components(self):
         self.layout_buttons = QHBoxLayout()
         self.layout_buttons.setAlignment(Qt.AlignTop)
-       
+
         label = QLabel("Inventario")
         self.layout.addWidget(label)
 
@@ -70,14 +73,13 @@ class WidgetInventario(QWidget):
         self.layout.addWidget(self.q_cantidad)
         self.layout.addWidget(cantidad)
 
-
         button = QPushButton("Agregar", clicked=self.__agregar)
         self.layout_buttons.addWidget(button)
         button = QPushButton("Eliminar")
         self.layout_buttons.addWidget(button)
         button = QPushButton("Modificar")
         self.layout_buttons.addWidget(button)
-    
+
         self.layout.addLayout(self.layout_buttons)
 
         self.table = QTableView()
@@ -87,18 +89,36 @@ class WidgetInventario(QWidget):
 
     def __agregar(self):
         marca = Marca.get(Marca.nombre == self.combo.currentText())
-        categoria = Categoria.get(Categoria.nombre == self.combo_categoria.currentText())
+        categoria = Categoria.get(
+            Categoria.nombre == self.combo_categoria.currentText()
+        )
         size = Size.get(Size.nombre == self.combo_size.currentText())
         cantidad = int(self.q_cantidad.text())
         precio = float(self.q_precio.text())
-        ropa = Ropa.create(precio=precio, categoria=categoria.id, size=size.id, marca=marca.id, cantidad=cantidad)
+        ropa = Ropa.create(
+            precio=precio,
+            categoria=categoria.id,
+            size=size.id,
+            marca=marca.id,
+            cantidad=cantidad,
+        )
         ropa.save()
         self.__load_data()
+
     def __load_data(self):
 
         ropas = get_all_ropa()
-        print(ropas)
-        headers = ["ID", "Precio", "Categoria", "Size", "Marca", "Cantidad"]
-        values = ["id", "precio", "categoria", "size", "marca", "cantidad"]
-        tablemodel = TableModel(ropas, headers, values)
-        self.table.setModel(tablemodel)
+        for ropa in ropas:
+            print(ropa)
+
+        headers = ["ID", "Marca", "Categoria", "Size", "Precio", "Cantidad"]
+        values = [
+            "id",
+            ["marca", "nombre"],
+            ["categoria", "nombre"],
+            ["size", "nombre"],
+            "precio",
+            "cantidad",
+        ]
+        model = TableModel(ropas, headers=headers, values=values)
+        self.table.setModel(model)
