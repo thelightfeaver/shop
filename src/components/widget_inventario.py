@@ -9,6 +9,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QTableView,
     QTableWidget,
+    QMessageBox
 )
 
 from src.db.service_inventario import get_all_ropa
@@ -23,6 +24,7 @@ class WidgetInventario(QWidget):
         self,
     ) -> None:
         super().__init__()
+        self.var_id = None
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
         self.setWindowTitle("Inventario")
@@ -38,13 +40,13 @@ class WidgetInventario(QWidget):
         self.layout.addWidget(label)
 
         # Combobox of Marca
-        self.combo = QComboBox()
+        self.combo_marca = QComboBox()
 
         marcas = Marca.select().where(Marca.eliminado == False)
-        self.combo.addItems([marca.nombre for marca in marcas])
+        self.combo_marca.addItems([marca.nombre for marca in marcas])
         select = QLabel("Seleccionar Marca:")
         self.layout.addWidget(select)
-        self.layout.addWidget(self.combo)
+        self.layout.addWidget(self.combo_marca)
 
         # Combobox of Categoria
         self.combo_categoria = QComboBox()
@@ -59,36 +61,44 @@ class WidgetInventario(QWidget):
         self.combo_size = QComboBox()
         sizes = Size.select().where(Size.eliminado == False)
         self.combo_size.addItems([size.nombre for size in sizes])
-        select = QLabel("Seleccionar ropa:")
+        select = QLabel("Size:")
         self.layout.addWidget(select)
         self.layout.addWidget(self.combo_size)
 
-        precio = QLabel("Precio")
+        # Qlabel precio
+        label_precio = QLabel("Precio:")
         self.q_precio = QLineEdit()
+        self.layout.addWidget(label_precio)
         self.layout.addWidget(self.q_precio)
-        self.layout.addWidget(precio)
 
-        cantidad = QLabel("Cantidad")
+        # Qlabel cantidad
+        label_cantidad = QLabel("Cantidad:")
         self.q_cantidad = QLineEdit()
+        self.layout.addWidget(label_cantidad)
         self.layout.addWidget(self.q_cantidad)
-        self.layout.addWidget(cantidad)
 
+        # Qpushbutton agregar
         button = QPushButton("Agregar", clicked=self.__agregar)
         self.layout_buttons.addWidget(button)
-        button = QPushButton("Eliminar")
+        
+        # Qpushbutton eliminar
+        button = QPushButton("Eliminar", clicked=self.__eliminar)
         self.layout_buttons.addWidget(button)
-        button = QPushButton("Modificar")
+        
+        # Qpushbutton Modificar
+        button = QPushButton("Modificar", clicked=self.__modificar)
         self.layout_buttons.addWidget(button)
-
         self.layout.addLayout(self.layout_buttons)
 
+        # qtableview inventario
         self.table = QTableView()
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
+        self.table.clicked.connect(self.__on_table_clicked)
         self.layout.addWidget(self.table)
 
     def __agregar(self):
-        marca = Marca.get(Marca.nombre == self.combo.currentText())
+        marca = Marca.get(Marca.nombre == self.combo_marca.currentText())
         categoria = Categoria.get(
             Categoria.nombre == self.combo_categoria.currentText()
         )
@@ -104,6 +114,9 @@ class WidgetInventario(QWidget):
         )
         ropa.save()
         self.__load_data()
+        self.__limpiar_valores()
+
+        QMessageBox.information(self, "Aviso", "Inventario agregado!")
 
     def __load_data(self):
 
@@ -119,3 +132,65 @@ class WidgetInventario(QWidget):
         ]
         model = TableModel(ropas, headers=headers, values=values)
         self.table.setModel(model)
+
+
+    def __eliminar(self):
+        selected_row = self.table.selectionModel().selectedRows()
+
+        if selected_row:
+            ropa = Ropa.get(id=self.var_id)
+            ropa.eliminado = True
+            ropa.save()
+
+            self.__load_data()
+            self.__limpiar_valores()
+
+            QMessageBox.information(self, "Aviso", "Inventario eliminado!")
+        else:
+            QMessageBox.critical(self, "Error", "Seleccione una marca para eliminar")
+
+    def __modificar(self):
+        selected_row = self.table.selectionModel().selectedRows()
+        if selected_row:
+            ropa = Ropa.get(id=self.var_id)
+            marca = Marca.get(Marca.nombre == self.combo_marca.currentText())
+            categoria = Categoria.get(
+                Categoria.nombre == self.combo_categoria.currentText()
+            )
+            size = Size.get(Size.nombre == self.combo_size.currentText())
+            cantidad = int(self.q_cantidad.text())
+            precio = float(self.q_precio.text())
+
+            ropa.marca = marca.id
+            ropa.categoria = categoria.id
+            ropa.size = size.id
+            ropa.cantidad = cantidad
+            ropa.precio = precio
+            ropa.save()
+
+            self.__load_data()
+            self.__limpiar_valores()
+
+            QMessageBox.information(self, "Aviso", "Inventario modificado")
+        else:
+            QMessageBox.critical(self, "Error", "Seleccione una marca para modificar")
+
+    def __on_table_clicked(self):
+        selected_row = self.table.selectionModel().selectedRows()
+        if selected_row:
+            index = selected_row[0]
+            self.var_id = index.sibling(index.row(), 0).data()
+            self.combo_marca.setCurrentText(index.sibling(index.row(), 1).data())
+            self.combo_categoria.setCurrentText(index.sibling(index.row(), 2).data())
+            self.combo_size.setCurrentText(index.sibling(index.row(), 3).data())
+            self.q_precio.setText(str(index.sibling(index.row(), 4).data()))
+            self.q_cantidad.setText(str(index.sibling(index.row(), 5).data()))
+
+
+    def __limpiar_valores(self):
+        self.var_id = None
+        self.q_cantidad.clear()
+        self.q_precio.clear()
+        self.combo_marca.setCurrentIndex(0)
+        self.combo_categoria.setCurrentIndex(0)
+        self.combo_size.setCurrentIndex(0)
