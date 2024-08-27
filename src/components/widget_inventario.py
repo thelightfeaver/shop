@@ -1,3 +1,12 @@
+
+from datetime import datetime as dt
+
+from src.db.service_inventario import get_all_ropa
+from src.db.model import Marca, Ropa
+from src.db.model import Size
+from src.db.model import Categoria
+from src.components.widget_table import TableModel
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QWidget,
@@ -12,11 +21,6 @@ from PySide6.QtWidgets import (
     QMessageBox
 )
 
-from src.db.service_inventario import get_all_ropa
-from src.db.model import Marca, Ropa
-from src.db.model import Size
-from src.db.model import Categoria
-from src.components.widget_table import TableModel
 
 
 class WidgetInventario(QWidget):
@@ -111,6 +115,7 @@ class WidgetInventario(QWidget):
             size=size.id,
             marca=marca.id,
             cantidad=cantidad,
+            fecha=dt.now()
         )
         ropa.save()
         self.__load_data()
@@ -121,7 +126,7 @@ class WidgetInventario(QWidget):
     def __load_data(self):
 
         ropas = get_all_ropa()
-        headers = ["ID", "Marca", "Categoria", "Size", "Precio", "Cantidad"]
+        headers = ["ID", "Marca", "Categoria", "Size", "Precio", "Cantidad", "Fecha"]
         values = [
             "id",
             ["marca", "nombre"],
@@ -129,10 +134,10 @@ class WidgetInventario(QWidget):
             ["size", "nombre"],
             "precio",
             "cantidad",
+            "fecha",
         ]
         model = TableModel(ropas, headers=headers, values=values)
         self.table.setModel(model)
-
 
     def __eliminar(self):
         selected_row = self.table.selectionModel().selectedRows()

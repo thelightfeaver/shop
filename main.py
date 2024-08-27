@@ -1,5 +1,6 @@
 """Este modulo contiene la clase principal de la aplicacion Shop."""
 
+from src.components.widget_venta import WidgetVenta
 from src.components.widget_marca import WidgetMarca
 from src.components.widget_size import WidgetSize
 from src.components.widget_inventario import WidgetInventario
@@ -59,13 +60,17 @@ class Windows(QMainWindow):
         self.layout.addWidget(button)
 
         button = QPushButton("Ventas")
-        # button.clicked.connect(self.__show_ventas)
+        button.clicked.connect(self.__show_ventas)
         self.layout.addWidget(button)
 
         button = QPushButton("Inventario")
         button.clicked.connect(self.__show_productos)
         self.layout.addWidget(button)
 
+    def __show_ventas(self):
+            
+        self.__show_widget(WidgetVenta)
+                               
     def __show_productos(self):
 
         self.__show_widget(WidgetInventario)
