@@ -28,13 +28,13 @@ class Producto:
     def __str__(self):
         return f"{self.id} - {self.nombre} - ${self.precio} - {self.cantidad}"
 
-
 class WidgetVenta(QWidget):
 
     def __init__(self):
         super().__init__()
         self.precio_total = 0
         self.data = []
+        self.index = None
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
         self.setWindowTitle("Ventas")
@@ -97,12 +97,16 @@ class WidgetVenta(QWidget):
         self.q_cantidad.setText("")
         self.combo_ropas.setCurrentIndex(0)
 
+
     def _actualizar_total(self):
 
         total = sum([producto.precio * producto.cantidad for producto in self.data])
         if total:
 
             self.precio_total = total
+            self.lbl_total.setText(f"Total: ${self.precio_total}")
+        else:
+            self.precio_total = 0
             self.lbl_total.setText(f"Total: ${self.precio_total}")
 
     def facturar_compra(self):
@@ -117,15 +121,29 @@ class WidgetVenta(QWidget):
                 dinero_pagado=self.precio_total,
             )
         self._limpiar_datos()
+        self.data = []
+        self._cargar_datos()
+        self._actualizar_total()
 
     def _cargar_datos(self):
         headers = ["Id", "Nombre", "Precio", "Cantidad"]
         values = ["id", "nombre", "precio", "cantidad"]
-        self.data = []
         model = TableModel(data=self.data, headers=headers, values=values)
         self.table.setModel(model)
 
     def _on_table_click(self):
         selected_row = self.table.selectionModel().selectedRows()
         if selected_row:
-            index = selected_row[0]
+            self.index = selected_row[0]
+            button = QPushButton("Eliminar")
+            button.clicked.connect(self._delete_data)
+            self.layout.addWidget(button)
+
+    def _delete_data(self):
+        selected_row = self.table.selectionModel().selectedRows()
+        if selected_row:
+            
+            for data in self.data:
+                if data.id == selected_row[0].sibling(selected_row[0].row(), 0).data():
+                    self.data.remove(data)
+                    break
