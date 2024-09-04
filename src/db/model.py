@@ -37,7 +37,7 @@ class Ropa(Model):
     size = ForeignKeyField(Size)
     marca = ForeignKeyField(Marca)
     cantidad = IntegerField()
-    fecha = DateField('dd/mm/yyyy')
+    fecha = DateField("dd/mm/yyyy")
     eliminado = BooleanField(default=False)
 
     class Meta:
@@ -46,7 +46,7 @@ class Ropa(Model):
 
 class Venta(Model):
     id = AutoField(True)
-    fecha = DateField('dd/mm/yyyy')
+    fecha = DateField("dd/mm/yyyy")
     ropa = ForeignKeyField(Ropa)
     cantidad = IntegerField()
     precio = IntegerField()

@@ -20,15 +20,7 @@ class Windows(QMainWindow):
     """
     A class representing the main window of the Shop application.
     Methods:
-    - __init__: Initializes the main window.
-    - __eliminar: Deletes a category from the database.
-    - __agregar: Adds a new category to the database.
-    - __modificar: Modifies an existing category in the database.
-    - __load_data: Loads data from the database and populates the table.
-    - __init_components: Initializes the components of the main window.
-    - __on_table_clicked: Handles the event when a row in the table is clicked.
-    - __limpiar_valores: Clears the values of the input fields.
-    - start: Shows the main window.
+    
     """
 
     def __init__(self):

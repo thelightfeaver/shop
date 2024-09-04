@@ -1,4 +1,3 @@
-
 from datetime import datetime as dt
 
 from src.db.service_inventario import get_all_ropa
@@ -18,9 +17,8 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QTableView,
     QTableWidget,
-    QMessageBox
+    QMessageBox,
 )
-
 
 
 class WidgetInventario(QWidget):
@@ -84,11 +82,11 @@ class WidgetInventario(QWidget):
         # Qpushbutton agregar
         button = QPushButton("Agregar", clicked=self.__agregar)
         self.layout_buttons.addWidget(button)
-        
+
         # Qpushbutton eliminar
         button = QPushButton("Eliminar", clicked=self.__eliminar)
         self.layout_buttons.addWidget(button)
-        
+
         # Qpushbutton Modificar
         button = QPushButton("Modificar", clicked=self.__modificar)
         self.layout_buttons.addWidget(button)
@@ -115,7 +113,7 @@ class WidgetInventario(QWidget):
             size=size.id,
             marca=marca.id,
             cantidad=cantidad,
-            fecha=dt.now()
+            fecha=dt.now(),
         )
         ropa.save()
         self.__load_data()
@@ -190,7 +188,6 @@ class WidgetInventario(QWidget):
             self.combo_size.setCurrentText(index.sibling(index.row(), 3).data())
             self.q_precio.setText(str(index.sibling(index.row(), 4).data()))
             self.q_cantidad.setText(str(index.sibling(index.row(), 5).data()))
-
 
     def __limpiar_valores(self):
         self.var_id = None

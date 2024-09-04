@@ -16,3 +16,14 @@ def get_all_ropa():
     )
 
     return ropa
+
+
+def get_ropa_by_id(id: int):
+    ropa = (
+        Ropa.select()
+        .join(Marca, on=(Marca.id == Ropa.marca))
+        .join(Size, on=(Size.id == Ropa.size))
+        .join(Categoria, on=(Categoria.id == Ropa.categoria))
+        .where(Ropa.eliminado == False, Ropa.id == id)
+    )
+    return ropa
