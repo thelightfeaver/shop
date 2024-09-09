@@ -11,18 +11,14 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QWidget,
     QVBoxLayout,
+    QHBoxLayout,
     QLabel,
     QPushButton,
 )
 
 
 class Windows(QMainWindow):
-    """
-    A class representing the main window of the Shop application.
-    Methods:
-    
-    """
-
+    """Clase principal de la aplicacion"""
     def __init__(self):
         super().__init__()
 
@@ -30,56 +26,56 @@ class Windows(QMainWindow):
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
         self.layout = QVBoxLayout(self.central_widget)
-        self.__init_components()
+        self._init_components()
 
         # Widgets
         self.container = None
 
-    def __init_components(self):
+    def _init_components(self):
         q = QLabel("Menu Principal")
         self.layout.addWidget(q)
 
         button = QPushButton("Categorias")
-        button.clicked.connect(self.__show_categorias)
+        button.clicked.connect(self._show_categorias)
         self.layout.addWidget(button)
 
         button = QPushButton("Marcas")
-        button.clicked.connect(self.__show_marcas)
+        button.clicked.connect(self._show_marcas)
         self.layout.addWidget(button)
 
         button = QPushButton("Sizes")
-        button.clicked.connect(self.__show_sizes)
+        button.clicked.connect(self._show_sizes)
         self.layout.addWidget(button)
 
         button = QPushButton("Ventas")
-        button.clicked.connect(self.__show_ventas)
+        button.clicked.connect(self._show_ventas)
         self.layout.addWidget(button)
 
         button = QPushButton("Inventario")
-        button.clicked.connect(self.__show_productos)
+        button.clicked.connect(self._show_productos)
         self.layout.addWidget(button)
 
-    def __show_ventas(self):
+    def _show_ventas(self):
             
-        self.__show_widget(WidgetVenta)
+        self._show_widget(WidgetVenta)
                                
-    def __show_productos(self):
+    def _show_productos(self):
 
-        self.__show_widget(WidgetInventario)
+        self._show_widget(WidgetInventario)
 
-    def __show_categorias(self):
+    def _show_categorias(self):
 
-        self.__show_widget(WidgetCategoria)
+        self._show_widget(WidgetCategoria)
 
-    def __show_marcas(self):
+    def _show_marcas(self):
 
-        self.__show_widget(WidgetMarca)
+        self._show_widget(WidgetMarca)
 
-    def __show_sizes(self):
+    def _show_sizes(self):
 
-        self.__show_widget(WidgetSize)
+        self._show_widget(WidgetSize)
 
-    def __show_widget(self,  widget):
+    def _show_widget(self,  widget):
         try:
            
             if self.container is None or not self.container.isVisible():

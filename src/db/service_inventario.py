@@ -27,3 +27,9 @@ def get_ropa_by_id(id: int):
         .where(Ropa.eliminado == False, Ropa.id == id)
     )
     return ropa
+
+
+def update_canitdad_ropa(id: int, cantidad: int):
+    ropa = Ropa.get(Ropa.id == id)
+    ropa.cantidad = ropa.cantidad - cantidad
+    ropa.save()
