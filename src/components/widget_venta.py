@@ -111,7 +111,9 @@ class WidgetVenta(QWidget):
     def _on_combo_change(self):
         id = self.combo_ropas.currentText().split(" - ")[0].strip()
         ropa = get_ropa_by_id(id)[0]
-        self.q_precio.setText(f"Precio: ${ropa.precio}")
+
+        if self.q_precio:
+            self.q_precio.setText(f"Precio: ${ropa.precio}")
 
     def _agregar_articulo(self):
         try:
@@ -136,7 +138,6 @@ class WidgetVenta(QWidget):
     def _limpiar_datos(self):
         self.q_cantidad.setText("")
         self.combo_ropas.setCurrentIndex(0)
-        self.data = []
 
     def _actualizar_total(self):
 
@@ -152,7 +153,6 @@ class WidgetVenta(QWidget):
     def _facturar_compra(self):
 
         dls = CustomDialog("Facturar", "¿Desea facturar la compra?")
-
         if dls.exec() == QMessageBox.Accepted:
             for producto in self.data:
                 Venta.create(
@@ -170,6 +170,7 @@ class WidgetVenta(QWidget):
             self._limpiar_datos()
             self._cargar_datos()
             self._actualizar_total()
+            self.data = []
 
     def _cargar_datos(self):
         headers = ["Id", "Nombre", "Precio", "Cantidad"]
@@ -200,6 +201,7 @@ class WidgetVenta(QWidget):
                         break
 
                 self.btn_borrar.hide()
+                self._actualizar_total()
                 self._cargar_datos()
         else:
             self.btn_borrar.hide()
