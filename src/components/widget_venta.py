@@ -111,9 +111,7 @@ class WidgetVenta(QWidget):
     def _on_combo_change(self):
         id = self.combo_ropas.currentText().split(" - ")[0].strip()
         ropa = get_ropa_by_id(id)[0]
-
-        if self.q_precio:
-            self.q_precio.setText(f"Precio: ${ropa.precio}")
+        self.q_precio.setText(f"Precio: ${ropa.precio}")
 
     def _agregar_articulo(self):
         try:
@@ -167,10 +165,10 @@ class WidgetVenta(QWidget):
 
                 update_canitdad_ropa(producto.id, producto.cantidad)
 
+            self.data = []
             self._limpiar_datos()
             self._cargar_datos()
             self._actualizar_total()
-            self.data = []
 
     def _cargar_datos(self):
         headers = ["Id", "Nombre", "Precio", "Cantidad"]
