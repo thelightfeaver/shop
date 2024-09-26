@@ -1,0 +1,1 @@
+nuitka --standalone --onefile  main.py --output-dir=dist --enable-plugin=pyside6 
