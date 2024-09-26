@@ -1,5 +1,6 @@
 """Este modulo contiene la clase principal de la aplicacion Shop."""
 
+from src.components.widget_graph import WidgetGraph
 from src.components.widget_venta import WidgetVenta
 from src.components.widget_marca import WidgetMarca
 from src.components.widget_size import WidgetSize
@@ -12,18 +13,20 @@ from PySide6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QLabel,
-    QPushButton
+    QPushButton,
 )
 
 
 class Windows(QMainWindow):
     """Clase principal de la aplicacion"""
+
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Shop")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
+        self
         self.layout = QVBoxLayout(self.central_widget)
         self._init_components()
 
@@ -54,10 +57,14 @@ class Windows(QMainWindow):
         button.clicked.connect(self._show_productos)
         self.layout.addWidget(button)
 
+        button = QPushButton("Gráfico")
+        button.clicked.connect(self._show_graph)
+        self.layout.addWidget(button)
+
     def _show_ventas(self):
-            
+
         self._show_widget(WidgetVenta)
-                               
+
     def _show_productos(self):
 
         self._show_widget(WidgetInventario)
@@ -74,9 +81,13 @@ class Windows(QMainWindow):
 
         self._show_widget(WidgetSize)
 
-    def _show_widget(self,  widget):
+    def _show_graph(self):
+
+        self._show_widget(WidgetGraph)
+
+    def _show_widget(self, widget):
         try:
-           
+
             if self.container is None or not self.container.isVisible():
                 self.container = widget()
                 self.container.show()
