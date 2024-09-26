@@ -8,11 +8,14 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
 peewee = "^3.17.6"
-tksheet = "^7.2.14"
 pyside6 = "^6.7.2"
 black = "^24.8.0"
 matplotlib = "^3.9.2"
 
+
+[tool.poetry.group.dev.dependencies]
+nuitka = "^2.4.8"
+black = "^24.8.0"
 
 [build-system]
 requires = ["poetry-core"]

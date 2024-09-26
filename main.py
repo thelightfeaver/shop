@@ -1,5 +1,8 @@
 """Este modulo contiene la clase principal de la aplicacion Shop."""
 
+
+from src.db.model import Ropa, Categoria, Marca, Size
+from src.db.service_ventas import check_ventas
 from src.components.widget_graph import WidgetGraph
 from src.components.widget_venta import WidgetVenta
 from src.components.widget_marca import WidgetMarca
@@ -14,6 +17,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QLabel,
     QPushButton,
+    QMessageBox
 )
 
 
@@ -26,7 +30,6 @@ class Windows(QMainWindow):
         self.setWindowTitle("Shop")
         self.central_widget = QWidget()
         self.setCentralWidget(self.central_widget)
-        self
         self.layout = QVBoxLayout(self.central_widget)
         self._init_components()
 
@@ -63,11 +66,22 @@ class Windows(QMainWindow):
 
     def _show_ventas(self):
 
-        self._show_widget(WidgetVenta)
+        cantidades = Ropa.select(Ropa.eliminado == False).count()
+        if cantidades > 0:
+            self._show_widget(WidgetVenta)
+        else:
+            QMessageBox.warning(self, "Error", "No hay productos en el inventario!")
 
     def _show_productos(self):
 
-        self._show_widget(WidgetInventario)
+        cant_categories = Categoria.select(Categoria.eliminado == False).count()
+        cant_marcas = Marca.select(Marca.eliminado == False).count()
+        cant_sizes = Size.select(Size.eliminado == False).count()
+
+        if cant_categories > 0 and cant_marcas > 0 and cant_sizes > 0:
+            self._show_widget(WidgetInventario)
+        else:
+            QMessageBox.warning(self, "Error", "No hay categorias, marcas o sizes en el inventario!")
 
     def _show_categorias(self):
 
@@ -82,8 +96,10 @@ class Windows(QMainWindow):
         self._show_widget(WidgetSize)
 
     def _show_graph(self):
-
-        self._show_widget(WidgetGraph)
+        if check_ventas():  
+            self._show_widget(WidgetGraph)
+        else:
+            QMessageBox.warning(self, "Error", "No hay ventas registradas!")
 
     def _show_widget(self, widget):
         try:
